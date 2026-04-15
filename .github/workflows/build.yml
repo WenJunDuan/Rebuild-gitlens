@@ -96,7 +96,8 @@ jobs:
             - name: Code formating
               if: steps.check_tag.outputs.exists == 'false'
               run: |
-                  pnpm --package=prettier --package=@prettier/plugin-oxc dlx prettier \
+                  pnpm add -Dw prettier @prettier/plugin-oxc
+                  pnpm exec prettier \
                     --plugin=@prettier/plugin-oxc \
                     --write src/plus/gk/utils/checkin.utils.ts
 
