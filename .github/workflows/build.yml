@@ -18,7 +18,7 @@ jobs:
             contents: write
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                 fetch-tags: true
                 fetch-depth: 0
@@ -45,13 +45,14 @@ jobs:
 
             - name: Setup node
               if: steps.check_tag.outputs.exists == 'false'
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v5
               with:
                   node-version: '22'
+                  package-manager-cache: false
 
             - name: Setup pnpm
               if: steps.check_tag.outputs.exists == 'false'
-              uses: pnpm/action-setup@v3
+              uses: pnpm/action-setup@v5
               with:
                   version: 10
 
@@ -73,7 +74,7 @@ jobs:
 
             - name: 拉取patches
               if: steps.check_tag.outputs.exists == 'false'
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   repository: ${{ github.repository }}
                   path: source-repo
@@ -95,8 +96,9 @@ jobs:
             - name: Code formating
               if: steps.check_tag.outputs.exists == 'false'
               run: |
-                  pnpm install --save-dev prettier @prettier/plugin-oxc
-                  npx prettier --write src/plus/gk/utils/checkin.utils.ts
+                  pnpm --package=prettier --package=@prettier/plugin-oxc dlx prettier \
+                    --plugin=@prettier/plugin-oxc \
+                    --write src/plus/gk/utils/checkin.utils.ts
 
             - name: Remove source-repo
               if: steps.check_tag.outputs.exists == 'false'
